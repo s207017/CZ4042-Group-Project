@@ -53,6 +53,10 @@ results/
 data/**/*.csv
 !data/.gitkeep
 
+# Intermediate processed data
+intermediate/data/*.csv
+!intermediate/data/.gitkeep
+
 # HuggingFace cache
 .cache/
 transformers_cache/

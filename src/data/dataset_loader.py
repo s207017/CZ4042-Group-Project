@@ -146,6 +146,60 @@ class SST2Loader(DatasetLoader):
         )
 
 
+def load_preprocessed_data(dataset_name: str, 
+                          data_dir: str = "intermediate/data") -> Tuple[List[str], List[int]]:
+    """
+    Load preprocessed data from intermediate directory.
+    
+    Args:
+        dataset_name: Name of dataset and split, e.g.:
+            - 'imdb_train', 'imdb_val', 'imdb_test'
+            - 'yelp_train', 'yelp_val', 'yelp_test'
+            - 'sst2_train', 'sst2_val', 'sst2_test'
+        data_dir: Directory containing preprocessed files
+        
+    Returns:
+        texts, labels
+    """
+    data_path = Path(data_dir)
+    file_map = {
+        # IMDB splits
+        'imdb_train': 'imdb_train_preprocessed.csv',
+        'imdb_val': 'imdb_val_preprocessed.csv',
+        'imdb_test': 'imdb_test_preprocessed.csv',
+        # Yelp splits
+        'yelp_train': 'yelp_train_preprocessed.csv',
+        'yelp_val': 'yelp_val_preprocessed.csv',
+        'yelp_test': 'yelp_test_preprocessed.csv',
+        # SST-2 splits
+        'sst2_train': 'sst2_train_preprocessed.csv',
+        'sst2_val': 'sst2_val_preprocessed.csv',
+        'sst2_test': 'sst2_test_preprocessed.csv'
+    }
+    
+    if dataset_name not in file_map:
+        raise ValueError(
+            f"Unknown dataset: {dataset_name}.\n"
+            f"Choose from: {sorted(file_map.keys())}\n"
+            f"Note: All datasets are now split into train/val/test. "
+            f"Use '{{dataset}}_train', '{{dataset}}_val', or '{{dataset}}_test'."
+        )
+    
+    file_path = data_path / file_map[dataset_name]
+    
+    if not file_path.exists():
+        raise FileNotFoundError(
+            f"Preprocessed data not found: {file_path}\n"
+            f"Please run notebook 02_preprocessing.ipynb first to generate preprocessed data."
+        )
+    
+    df = pd.read_csv(file_path)
+    texts = df['text'].tolist()
+    labels = df['label'].tolist()
+    
+    return texts, labels
+
+
 def create_train_test_split(texts: List[str], labels: List[int], 
                           test_size: float = 0.2, val_size: float = 0.1,
                           random_state: int = 42) -> Tuple[List[str], List[str], List[str], 
