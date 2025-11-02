@@ -61,6 +61,9 @@ transformers_cache/
 .env
 .env.local
 
+# Progress tracking (local only)
+PROGRESS.md
+
 # OS
 Thumbs.db
 
