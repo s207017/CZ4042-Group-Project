@@ -1,0 +1,76 @@
+# Configuration file for Sentiment Analysis Project
+
+# Data paths
+data:
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  imdb_path: "data/raw/imdb.csv"
+  yelp_path: "data/raw/yelp.csv"
+  sst2_path: "data/raw/sst2.csv"
+
+# Model configuration
+model:
+  # Transformer models
+  transformer:
+    model_name: "bert-base-uncased"  # bert-base-uncased, roberta-base, xlnet-base-cased, google/electra-base-discriminator
+    num_classes: 2
+    dropout: 0.1
+    freeze_base: false
+    max_length: 512
+  
+  # Baseline models
+  baseline:
+    lstm:
+      vocab_size: 10000
+      embedding_dim: 100
+      hidden_dim: 128
+      num_layers: 2
+      dropout: 0.2
+    
+    cnn:
+      vocab_size: 10000
+      embedding_dim: 100
+      num_filters: 100
+      filter_sizes: [3, 4, 5]
+      dropout: 0.5
+
+# Training configuration
+training:
+  batch_size: 16
+  num_epochs: 5
+  learning_rate: 2e-5
+  weight_decay: 0.01
+  warmup_steps: 0.1  # fraction of total steps
+  max_grad_norm: 1.0
+  early_stopping_patience: 3
+  save_best_model: true
+
+# Dataset configuration
+dataset:
+  test_size: 0.2
+  val_size: 0.1
+  random_seed: 42
+  binary_classification: true
+
+# Experiment configuration
+experiment:
+  results_dir: "experiments/results"
+  plots_dir: "experiments/plots"
+  save_predictions: true
+  log_to_wandb: false
+  wandb_project: "sentiment-analysis"
+
+# Domain adaptation
+domain_adaptation:
+  enabled: false
+  source_domain: "imdb"
+  target_domain: "yelp"
+  adaptation_method: "fine_tuning"  # fine_tuning, adversarial, contrastive
+
+# Small dataset scenarios
+small_dataset:
+  enabled: false
+  augmentation: true
+  few_shot_samples: 100
+  use_transfer_learning: true
+
